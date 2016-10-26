@@ -1,6 +1,6 @@
 {
   "name": "obj-array-table",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Prints out an array of objects in table form",
   "main": "index.js",
   "scripts": {
