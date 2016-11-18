@@ -174,5 +174,53 @@ format = (inputObj, options) ->
 	lineAr.join '\n'
 
 
+# given a string in table format, returns an array of objects
+# uses the first line as properties for objects
+parse = (text) ->
+	retArray = []
+	headerSeen = false
+	propArray = []
+
+	lines = _.split text, '\n'
+	for line, i in lines
+		line = _.trim line
+		if _.startsWith line, '#'
+			# if line starts with a comment, ignore it
+			continue
+
+		if not line
+			continue
+
+		lineParts = _.split line, '|'
+		if lineParts.length < 3
+			# vertical bar not found
+			continue
+
+		if _.startsWith lineParts[1], '-'
+			continue
+
+		if not headerSeen
+			headerSeen = true
+			propArray = lineParts[1...].map((item) ->
+				return _.trim item
+			).filter (item) ->
+				item isnt ''
+			continue
+
+		newObj = {}
+		valFound = false
+		for prop, i in propArray
+			val = _.trim lineParts[i+1]
+			if not val
+				continue
+			newObj[prop] = val
+			valFound = true
+
+		if valFound
+			retArray.push newObj
+	retArray
+
+
 exports.format = format
+exports.parse = parse
 
