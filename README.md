@@ -34,7 +34,7 @@ First Name   Last Name   alive   Owned   zip     dob
 ----------   ---------   -----   -----   -----   --------------------
 John         Smith       true        2   00000   04/02/1946  08:41 pm
 Buckaroo     Banzai      false       1   12345   12/25/1957  07:41 pm
-  (2 rows returned)\n
+  (2 rows returned)
 ````
 
 
