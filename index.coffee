@@ -1,4 +1,4 @@
-dateformat = require 'dateformat'
+dateformat = require 'dateformat-nodep'
 _ = require 'lodash'
 
 # input is an array of rows

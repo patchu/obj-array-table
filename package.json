@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/patchu/obj-array-table#readme",
   "dependencies": {
-    "dateformat": "^1.0.12",
+    "dateformat-nodep": "^1.0.0",
     "lodash": "^4.16.4"
   }
 }
