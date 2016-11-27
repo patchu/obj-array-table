@@ -1,8 +1,9 @@
 # obj-array-table
 
-I wrote this to use in my personal projects.
+I wrote this to use in my personal projects. As such, the documentation is a bit sparse.
+Look at `test.coffee` for usage examples.
 
-It prints out an array of objects in table format. It turns this...
+`format` prints out an array of objects in table format. It turns this...
 
 ````javascript
   obj = [
@@ -38,7 +39,7 @@ Buckaroo     Banzai      false       1   12345   12/25/1957  07:41 pm
 ````
 
 
-Also, parses a table in the format:
+`parse` parses a table in the format:
 
 ````
 |------|-----------|------|
@@ -50,3 +51,17 @@ Also, parses a table in the format:
 ````
 
 into an array of objects, with the headers as the properties.
+
+````
+[
+  {
+    col1: '1',
+    strHeader: 'hello',
+    col3: '22'
+  }, {
+    col1: '2',
+    strHeader: 'world',
+    col3: '4'
+  }
+];
+````
