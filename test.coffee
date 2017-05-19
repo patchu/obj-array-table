@@ -6,6 +6,8 @@ exports.simple = (test) ->
 		"First Name": 'John'
 		"Last Name": 'Smith'
 		alive: true
+		"net.worth": 1199
+		age: 22
 		"How.Many.Cats.Owned": 2
 		zip: '00000'
 		dob: new Date 'Tue Apr 2 1946 20:41:37 GMT-0400 (EDT)'
@@ -13,20 +15,26 @@ exports.simple = (test) ->
 		"First Name": 'Buckaroo'
 		"Last Name": 'Banzai'
 		alive: false
+		age: 4319
+		"net.worth": 100000222.44
 		"How.Many.Cats.Owned": 1
 		zip: '12345'
 		dob: new Date 'Tue Dec 25 1957 20:41:37 GMT-0400 (EDT)'
 	]
 	options =
 		longdateformat: true
+		# using the "numeral" NPM package. See that documentation for formatting details
+		numberformat:
+			"net.worth": '$ 0,0.00'
+			age: '0,0'
 	teststr = """
-\n                                 How
-                                 Many
-                                 Cats
-First Name   Last Name   alive   Owned   zip     dob
-----------   ---------   -----   -----   -----   --------------------
-John         Smith       true        2   00000   04/02/1946  08:41 pm
-Buckaroo     Banzai      false       1   12345   12/25/1957  07:41 pm
+\n                                                            How
+                                                            Many
+                                 net                        Cats
+First Name   Last Name   alive   worth              age     Owned   zip     dob
+----------   ---------   -----   ----------------   -----   -----   -----   --------------------
+John         Smith       true          $ 1,199.00      22       2   00000   04/02/1946  08:41 pm
+Buckaroo     Banzai      false   $ 100,000,222.44   4,319       1   12345   12/25/1957  07:41 pm
   (2 rows returned)\n
 """
 
@@ -35,7 +43,7 @@ Buckaroo     Banzai      false       1   12345   12/25/1957  07:41 pm
 	testAr = teststr.split '\n'
 	for str, i in actualAr
 		# test trimmed strings
-		test.equal _.trim(str), _.trim(actualAr[i])
+		test.equal _.trim(testAr[i]), _.trim(actualAr[i])
 
 	console.log actualstr
 	# test.equal teststr, actualstr

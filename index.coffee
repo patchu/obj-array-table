@@ -1,4 +1,5 @@
 dateformat = require 'dateformat-nodep'
+numeral = require 'numeral'
 _ = require 'lodash'
 
 # input is an array of rows
@@ -47,6 +48,10 @@ format = (inputObj, options) ->
 				if val
 					if _.isDate val
 						val = dateformat val, formatstr
+					else if _.isNumber(val)
+						numberformat = options?.numberformat?[key]
+						if numberformat
+							val = numeral(val).format numberformat
 					columnLengthArray[key] = Math.max val.toString().length, columnLengthArray[key]
 
 		# console.log partsMax, columnLengthArray
@@ -124,7 +129,12 @@ format = (inputObj, options) ->
 					val = val.toString()
 
 				if _.isNumber val
+					numberformat = options?.numberformat?[key]
+					if numberformat
+						val = numeral(val).format numberformat
+
 					val = _.trim val.toString()
+
 					len = val.length
 					# lineAr.push 'length, value, stored len: ', len, val, columnLengthArray[key]
 					spacePadLen = columnLengthArray[key] - len
