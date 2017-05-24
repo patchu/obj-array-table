@@ -25,7 +25,7 @@ format = function(inputObj, options) {
     for (i = _i = 0, _len = keys.length; _i < _len; i = ++_i) {
       key = keys[i];
       columnLengthArray[key] = 3;
-      sp = key.split('.');
+      sp = key.split(/[_\.]/);
       for (_j = 0, _len1 = sp.length; _j < _len1; _j++) {
         str = sp[_j];
         columnLengthArray[key] = Math.max(columnLengthArray[key], str.length);
@@ -63,7 +63,7 @@ format = function(inputObj, options) {
       for (i = _o = 0; _o < partsMax; i = _o += 1) {
         tempAr.push('');
       }
-      sp = key.split('.');
+      sp = key.split(/[_\.]/);
       for (i = _p = 0, _len5 = sp.length; _p < _len5; i = ++_p) {
         str = sp[i];
         tempAr[i] = str;

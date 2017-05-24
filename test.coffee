@@ -8,7 +8,7 @@ exports.simple = (test) ->
 		alive: true
 		"net.worth": 1199
 		age: 22
-		"How.Many.Cats.Owned": 2
+		How_Many_Cats_Owned: 2
 		zip: '00000'
 		dob: new Date 'Tue Apr 2 1946 20:41:37 GMT-0400 (EDT)'
 	,
@@ -17,7 +17,7 @@ exports.simple = (test) ->
 		alive: false
 		age: 4319
 		"net.worth": 100000222.44
-		"How.Many.Cats.Owned": 1
+		How_Many_Cats_Owned: 1
 		zip: '12345'
 		dob: new Date 'Tue Dec 25 1957 20:41:37 GMT-0400 (EDT)'
 	]

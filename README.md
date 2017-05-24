@@ -3,6 +3,8 @@
 I wrote this to use in my personal projects. As such, the documentation is a bit sparse.
 Look at `test.coffee` for usage examples.
 
+## Format
+
 `format` prints out an array of objects in table format. It turns this...
 
 ````javascript
@@ -13,7 +15,7 @@ Look at `test.coffee` for usage examples.
       alive: true,
       "net.worth": 1199,
       age: 22,
-      "How.Many.Cats.Owned": 2,
+      How_Many_Cats_Owned: 2,
       zip: '00000',
       dob: new Date('Tue Apr 2 1946 20:41:37 GMT-0400 (EDT)')
     }, {
@@ -22,7 +24,7 @@ Look at `test.coffee` for usage examples.
       alive: false,
       age: 4319
       "net.worth": 100000222.44
-      "How.Many.Cats.Owned": 1,
+      How_Many_Cats_Owned: 1,
       zip: '12345',
       dob: new Date('Tue Dec 25 1957 20:41:37 GMT-0400 (EDT)')
     }
@@ -42,10 +44,11 @@ Buckaroo     Banzai      false   $ 100,000,222.44   4,319       1   12345   12/2
   (2 rows returned)
 ````
 
-The commas and decimals in the numbers are provided by the `numerals` npm module. See that
+The commas and decimals in the "net worth" column are provided by the `numerals` npm module. See that
 documentation for number formatting options. See `test.coffee` for an example of how to
-pass the desired option to `format`
+pass the desired numerals option to `format`
 
+## Parse
 
 `parse` parses a table in the format:
 

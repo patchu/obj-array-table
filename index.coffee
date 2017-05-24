@@ -35,7 +35,7 @@ format = (inputObj, options) ->
 		for key, i in keys
 			columnLengthArray[key] = 3
 
-			sp = key.split '.'
+			sp = key.split /[_\.]/
 			for str in sp
 				# set to the longest of the split parts
 				columnLengthArray[key] = Math.max columnLengthArray[key], str.length
@@ -72,7 +72,7 @@ format = (inputObj, options) ->
 			for i in [0... partsMax] by 1
 				tempAr.push ''
 
-			sp = key.split '.'
+			sp = key.split /[_\.]/
 			for str, i in sp
 				tempAr[i] = str
 
