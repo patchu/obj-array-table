@@ -14,6 +14,8 @@ _ = require 'lodash'
 #		meetInMiddle: right-justify even columns and left-justify odd columns
 format = (inputObj, options) ->
 	options = options or {}
+	betweenStr = "│"
+	startLine = "│"
 
 	lineAr = []
 	if inputObj and inputObj.length
@@ -57,17 +59,23 @@ format = (inputObj, options) ->
 		# console.log partsMax, columnLengthArray
 
 		longStringOfSpaces = '                                                                                                                                                                                                                                                                                                '
-		longDashes =         '------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------'
+		longDashes =         '────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────'
 
 		# print the column names
 		# dotted columns names will be displayed in multiple lines
-		linestr = ''
+		linestr = startLine
 		newStrAr = []
 
 		for i in [0... partsMax] by 1
-			newStrAr.push ''
+			newStrAr.push startLine
 
+		borderline = startLine
 		for key,l in keys 			# l
+			collen = columnLengthArray[key]
+
+			# configure border line (top and bottom) first
+			borderline += longDashes[0 ... collen+2] + betweenStr
+
 			tempAr = []
 			for i in [0... partsMax] by 1
 				tempAr.push ''
@@ -87,11 +95,20 @@ format = (inputObj, options) ->
 			# console.log 'end tempAr: ', tempAr
 
 			for str, i in tempAr
-				spacePadLen = columnLengthArray[key] + 1 - str.length
-				spacePad = longStringOfSpaces[0..spacePadLen]
-				newStrAr[i] += str+spacePad+" "
-				# linestr += str+spacePad+"  "
-			# linestr = newStrAr.join '\n'
+				# for blank strings, just output collen + 2
+				if not str.length
+					newStrAr[i] += ' ' + longStringOfSpaces[0 ... collen] + ' ' +betweenStr
+					continue
+
+				spacePad = ''
+				extra = ''
+				if collen isnt str.length
+					# padding needed
+					diff = collen - str.length
+					spacePad = longStringOfSpaces[ 0 ... (diff / 2) ]
+					extra = longStringOfSpaces[ 0 ... (diff % 2)]
+
+				newStrAr[i] += ' ' + spacePad + str + extra + spacePad + ' ' + betweenStr
 
 		# console.log newStrAr
 
@@ -106,19 +123,20 @@ format = (inputObj, options) ->
 		columnHeaders = newStrAr.join '\n'
 		# console.log columnHeaders, newStrAr
 
-		lineAr.push ''
 		# lineAr.push linestr
 		lineAr.push columnHeaders
 
 		# print the dashes under the column names
-		linestr = ''
+		linestr = '├─'
 		for key, i in keys
-			linestr += longDashes[1..columnLengthArray[key]]+"   "
+			linestr += "#{longDashes[1..columnLengthArray[key]]}─#{betweenStr}─"
+		linestr = linestr.replace /─│─/g, '─┼─'
+		linestr = linestr.replace /┼─$/g, '┤'
 		lineAr.push linestr
 
 		# now cycle again and print result
 		for obj, n in inputObj			# n index
-			linestr = ''
+			linestr = startLine+' '
 			for key, o in keys 		# o index
 				val = obj[key]
 
@@ -147,9 +165,10 @@ format = (inputObj, options) ->
 							spacePad = spacePad.substring 0,60
 
 					if options.meetInMiddle and o % 2 is 1
-						linestr += val+spacePad+"   "
+						# linestr += val+spacePad+"   "
+						linestr += "#{val}#{spacePad} #{betweenStr} "
 					else
-						linestr += spacePad+val.toString()+"   "
+						linestr += "#{spacePad}#{val.toString()} #{betweenStr} "
 				else
 					if toString.call(val) is '[object Date]'
 						val = dateformat val, formatstr
@@ -165,12 +184,32 @@ format = (inputObj, options) ->
 							spacePad = spacePad.substring 0,60
 					if options.meetInMiddle and o % 2 is 0
 						spacePad = longStringOfSpaces[2..spacePadLen]
-						linestr += spacePad+val+"   "
+						# linestr += spacePad+val+betweenStr
+						linestr += "#{spacePad}#{val}#{betweenStr} "
 					else
-						linestr += val+spacePad+"  "
+						# linestr += val+spacePad+betweenStr
+						linestr += "#{val}#{spacePad}#{betweenStr} "
+			linestr += betweenStr
+
+				# output the right bar to tne the string
+
+			# final transformations
 
 			# leave out the trailing |
-			lineAr.push linestr.substr 0, linestr.length-2
+			linestr = linestr.substr 0, linestr.length-2
+
+			lineAr.push linestr
+
+		# add border lines
+		topline = borderline.replace /─│─/g, '─┬─'
+		topline = topline.replace /│─/g, '┌─'
+		topline = topline.replace /─│/g, '─┐'
+		bottomline = borderline.replace /─│─/g, '─┴─'
+		bottomline = bottomline.replace /│─/g, '└─'
+		bottomline = bottomline.replace /─│/g, '─┘'
+		lineAr.unshift topline
+		lineAr.unshift ''
+		lineAr.push bottomline
 
 		rlen = inputObj.length
 		if rlen is 1

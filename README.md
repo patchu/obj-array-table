@@ -34,14 +34,15 @@ Look at `test.coffee` for usage examples.
 ... into this:
 
 ````
-                                                            How
-                                                            Many
-                                 net                        Cats
-First Name   Last Name   alive   worth              age     Owned   zip     dob
-----------   ---------   -----   ----------------   -----   -----   -----   --------------------
-John         Smith       true          $ 1,199.00      22       2   00000   04/02/1946  08:41 pm
-Buckaroo     Banzai      false   $ 100,000,222.44   4,319       1   12345   12/25/1957  07:41 pm
-  (2 rows returned)
+┌────────────┬───────────┬───────┬──────────────────┬───────┬───────┬───────┬──────────────────────┐
+│            │           │       │                  │       │  How  │       │                      │
+│            │           │       │                  │       │ Many  │       │                      │
+│            │           │       │       net        │       │ Cats  │       │                      │
+│ First Name │ Last Name │ alive │      worth       │  age  │ Owned │  zip  │         dob          │
+├────────────┼───────────┼───────┼──────────────────┼───────┼───────┼───────┼──────────────────────┤
+│ John       │ Smith     │ true  │       $ 1,199.00 │    22 │     2 │ 00000 │ 04/02/1946  08:41 pm │
+│ Buckaroo   │ Banzai    │ false │ $ 100,000,222.44 │ 4,319 │     1 │ 12345 │ 12/25/1957  07:41 pm │
+└────────────┴───────────┴───────┴──────────────────┴───────┴───────┴───────┴──────────────────────┘
 ````
 
 The commas and decimals in the "net worth" column are provided by the `numerals` npm module. See that
