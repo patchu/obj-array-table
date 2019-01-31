@@ -16,6 +16,9 @@ format = (inputObj, options) ->
 	options = options or {}
 	betweenStr = "│"
 	startLine = "│"
+	if options.spaceDivider
+		betweenStr = " "
+		startLine = " "
 
 	lineAr = []
 	if inputObj and inputObj.length
@@ -130,8 +133,12 @@ format = (inputObj, options) ->
 		linestr = '├─'
 		for key, i in keys
 			linestr += "#{longDashes[1..columnLengthArray[key]]}─#{betweenStr}─"
-		linestr = linestr.replace /─│─/g, '─┼─'
-		linestr = linestr.replace /┼─$/g, '┤'
+		if options.spaceDivider
+			linestr = linestr.replace /─\ ─/g, '─┼─'
+			linestr = linestr.replace /┼─$/g, '┤'
+		else
+			linestr = linestr.replace /─│─/g, '─┼─'
+			linestr = linestr.replace /┼─$/g, '┤'
 		lineAr.push linestr
 
 		# now cycle again and print result
@@ -201,12 +208,20 @@ format = (inputObj, options) ->
 			lineAr.push linestr
 
 		# add border lines
-		topline = borderline.replace /─│─/g, '─┬─'
-		topline = topline.replace /│─/g, '┌─'
-		topline = topline.replace /─│/g, '─┐'
-		bottomline = borderline.replace /─│─/g, '─┴─'
-		bottomline = bottomline.replace /│─/g, '└─'
-		bottomline = bottomline.replace /─│/g, '─┘'
+		if options.spaceDivider
+			topline = borderline.replace /─\ ─/g, '─┬─'
+			topline = topline.replace /\ ─/g, '┌─'
+			topline = topline.replace /─\ /g, '─┐'
+			bottomline = borderline.replace /─\ ─/g, '─┴─'
+			bottomline = bottomline.replace /\ ─/g, '└─'
+			bottomline = bottomline.replace /─\ /g, '─┘'
+		else
+			topline = borderline.replace /─│─/g, '─┬─'
+			topline = topline.replace /│─/g, '┌─'
+			topline = topline.replace /─│/g, '─┐'
+			bottomline = borderline.replace /─│─/g, '─┴─'
+			bottomline = bottomline.replace /│─/g, '└─'
+			bottomline = bottomline.replace /─│/g, '─┘'
 		lineAr.unshift topline
 		lineAr.unshift ''
 		lineAr.push bottomline

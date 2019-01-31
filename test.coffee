@@ -49,6 +49,35 @@ exports.simple = (test) ->
 
 	console.log actualstr
 	# test.equal teststr, actualstr
+
+	teststr = """
+\n┌────────────┬───────────┬───────┬──────────────────┬───────┬───────┬───────┬──────────────────────┐
+                                                               How
+                                                              Many
+                                         net                  Cats
+  First Name   Last Name   alive        worth          age    Owned    zip            dob
+├────────────┼───────────┼───────┼──────────────────┼───────┼───────┼───────┼──────────────────────┤
+  John         Smith       true          $ 1,199.00      22       2   00000   04/02/1946  08:41 pm
+  Buckaroo     Banzai      false   $ 100,000,222.44   4,319       1   12345   12/25/1957  07:41 pm
+└────────────┴───────────┴───────┴──────────────────┴───────┴───────┴───────┴──────────────────────┘
+  (2 rows returned)\n
+"""
+
+	options =
+		longdateformat: true
+		spaceDivider: true
+		# using the "numeral" NPM package. See that documentation for formatting details
+		numberformat:
+			"net.worth": '$ 0,0.00'
+			age: '0,0'
+	actualstr = objprint.format obj, options
+	actualAr = actualstr.split '\n'
+	testAr = teststr.split '\n'
+	for str, i in actualAr
+		# test trimmed strings
+		test.equal _.trim(testAr[i]), _.trim(actualAr[i])
+
+	console.log actualstr
 	test.done()
 
 
