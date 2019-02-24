@@ -2,6 +2,26 @@ dateformat = require 'dateformat-nodep'
 numeral = require 'numeral'
 _ = require 'lodash'
 
+# split and remove all empty elements
+splitTrimNoEmpty = (line, splitChar) ->
+	ar = line.split splitChar
+	newAr = []
+	for str in ar
+		newstr = _.trim str
+		if newstr
+			newAr.push newstr
+	newAr
+
+# returns an array with string split up by maxlen, if necessary
+splitMaxlenStr = (str, colMaxlen) ->
+	ar = []
+	# go through all strings, checking for max length
+	while str.length > colMaxlen
+		ar.push str.substring 0, colMaxlen
+		str = "↪  " + str.substring colMaxlen
+	ar.push str
+	return ar
+
 # input is an array of rows
 # [
 #		{col1: val, col2: val2}
@@ -24,11 +44,12 @@ format = (inputObj, options) ->
 	if inputObj and inputObj.length
 		obj = inputObj[0]
 		keys = _.keys obj
-		len = keys.length
+		keylen = keys.length
 		partsMax = 1 		# a "part" is a column name divided by "."
+		isNumber = _.fill Array(keylen), false
 
 		# find the longest length of each column
-		columnLengthArray = {}
+		columnLengthArray = []
 
 		if options.longdateformat
 			formatstr = 'mm/dd/yyyy  hh:MM tt'
@@ -38,26 +59,106 @@ format = (inputObj, options) ->
 
 		# seed the value with the column name
 		for key, i in keys
-			columnLengthArray[key] = 3
+			columnLengthArray[i] = 3
 
 			sp = key.split /[_\.]/
 			for str in sp
 				# set to the longest of the split parts
-				columnLengthArray[key] = Math.max columnLengthArray[key], str.length
+				columnLengthArray[i] = Math.max columnLengthArray[i], str.length
 			partsMax = Math.max partsMax, sp.length
 
-		# now cycle through each row and get the longest string
-		for obj, j in inputObj			# j index
-			for key, k in keys 		# k index
+		# create array of arrays of values that all subsequent code will use
+		valueLineAr = []
+
+		for obj, n in inputObj			# n index
+			rowAr = []
+			excessRows = []
+
+			for key, o in keys 		# o index
 				val = obj[key]
-				if val
-					if _.isDate val
+
+				if _.isArray val
+					val = JSON.stringify val
+
+				else if _.isBoolean val
+					val = val.toString()
+
+				else if _.isNumber val
+					isNumber[o] = true
+					numberformat = options?.numberformat?[key]
+					if numberformat
+						val = numeral(val).format numberformat
+
+					val = _.trim val.toString()
+				else
+					if toString.call(val) is '[object Date]'
 						val = dateformat val, formatstr
-					else if _.isNumber(val)
-						numberformat = options?.numberformat?[key]
-						if numberformat
-							val = numeral(val).format numberformat
-					columnLengthArray[key] = Math.max val.toString().length, columnLengthArray[key]
+						val = val.replace ', 0', ',  '
+
+					if not val?
+						val = ''
+
+					# split and see if we have more than one element
+					sp = splitTrimNoEmpty val, '\n'
+					if sp.length > 1
+						# check string length
+						colMaxlen = options.colMaxlen
+
+						ar = []
+						# go through all strings, checking for max length
+						for spstr in sp
+							if spstr.length < colMaxlen
+								ar.push spstr
+							else
+								ar = _.concat ar, splitMaxlenStr spstr, colMaxlen
+
+						for arStr, arIndex in ar
+							if arIndex >= excessRows.length
+								newRow = _.fill Array(keylen), ''
+								excessRows.push newRow
+							newRow = excessRows[arIndex]
+							newRow[o] = _.trim arStr
+					else if val.length > colMaxlen
+						ar = splitMaxlenStr val, colMaxlen
+						for arStr, arIndex in ar
+							if arIndex >= excessRows.length
+								newRow = _.fill Array(keylen), ''
+								excessRows.push newRow
+							newRow = excessRows[arIndex]
+							newRow[o] = _.trim arStr
+
+				rowAr.push val
+			if excessRows.length
+				# console.log excessRows
+				# merge with rowAr
+				for str, ix in excessRows[0]
+					if str
+						rowAr[ix] = str
+				excessRows = excessRows[1...]
+			valueLineAr.push rowAr
+			if excessRows.length
+				for row in excessRows
+					valueLineAr.push row
+
+		# console.log valueLineAr
+
+		# now cycle through each row and get the longest string
+		# for obj, j in inputObj			# j index
+		# 	for key, k in keys 		# k index
+		# 		val = obj[key]
+		# 		if val
+		# 			if _.isDate val
+		# 				val = dateformat val, formatstr
+		# 			else if _.isNumber(val)
+		# 				numberformat = options?.numberformat?[key]
+		# 				if numberformat
+		# 					val = numeral(val).format numberformat
+		# 			columnLengthArray[key] = Math.max val.toString().length, columnLengthArray[key]
+
+		for row, rowIndex in valueLineAr
+			for val, colIndex in row
+				val = val or ''
+				columnLengthArray[colIndex] = Math.max val.toString().length, columnLengthArray[colIndex]
 
 		# console.log partsMax, columnLengthArray
 
@@ -74,7 +175,7 @@ format = (inputObj, options) ->
 
 		borderline = startLine
 		for key,l in keys 			# l
-			collen = columnLengthArray[key]
+			collen = columnLengthArray[l]
 
 			# configure border line (top and bottom) first
 			borderline += longDashes[0 ... collen+2] + betweenStr
@@ -132,7 +233,7 @@ format = (inputObj, options) ->
 		# print the dashes under the column names
 		linestr = '├─'
 		for key, i in keys
-			linestr += "#{longDashes[1..columnLengthArray[key]]}─#{betweenStr}─"
+			linestr += "#{longDashes[1..columnLengthArray[i]]}─#{betweenStr}─"
 		if options.spaceDivider
 			linestr = linestr.replace /─\ ─/g, '─┼─'
 			linestr = linestr.replace /┼─$/g, '┤'
@@ -142,27 +243,23 @@ format = (inputObj, options) ->
 		lineAr.push linestr
 
 		# now cycle again and print result
-		for obj, n in inputObj			# n index
+		# for obj, n in inputObj			# n index
+		# 	linestr = startLine+' '
+		# 	for key, o in keys 		# o index
+				# val = obj[key]
+
+		for row, rowIndex in valueLineAr
 			linestr = startLine+' '
-			for key, o in keys 		# o index
-				val = obj[key]
+			for val, colIndex in row
+				if not val
+					val = ''
+				key = keys[colIndex]
 
-				if _.isArray val
-					val = JSON.stringify val
-
-				if _.isBoolean val
-					val = val.toString()
-
-				if _.isNumber val
-					numberformat = options?.numberformat?[key]
-					if numberformat
-						val = numeral(val).format numberformat
-
+				if isNumber[colIndex]
 					val = _.trim val.toString()
-
 					len = val.length
 					# lineAr.push 'length, value, stored len: ', len, val, columnLengthArray[key]
-					spacePadLen = columnLengthArray[key] - len
+					spacePadLen = columnLengthArray[colIndex] - len
 					# lineAr.push 'spacePadLen: ', spacePadLen
 					spacePad = longStringOfSpaces[1..spacePadLen]
 					# linestr += spacePad+val.toString()+" | "
@@ -177,13 +274,7 @@ format = (inputObj, options) ->
 					else
 						linestr += "#{spacePad}#{val.toString()} #{betweenStr} "
 				else
-					if toString.call(val) is '[object Date]'
-						val = dateformat val, formatstr
-						val = val.replace ', 0', ',  '
-
-					if not val?
-						val = ''
-					spacePadLen = columnLengthArray[key] + 1 - val.length
+					spacePadLen = columnLengthArray[colIndex] + 1 - val.length
 					spacePad = longStringOfSpaces[1..spacePadLen]
 					# linestr += val+spacePad+"| "
 					if options.meetInMiddle

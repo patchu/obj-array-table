@@ -4,7 +4,7 @@
   "description": "Prints out an array of objects in table form",
   "main": "index.js",
   "scripts": {
-    "test": "nodeunit test.coffee"
+    "test": "coffee -cb *.coffee && nodeunit test.coffee"
   },
   "repository": {
     "type": "git",
