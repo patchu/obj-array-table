@@ -46,7 +46,7 @@ splitMaxlenStr = function(str, colMaxlen) {
 //		longdateformat: true/false, print the year for date fields?
 //		meetInMiddle: right-justify even columns and left-justify odd columns
 format = function(inputObj, options) {
-  var ar, arIndex, arStr, betweenStr, borderline, bottomline, colIndex, colMaxlen, collen, columnHeaders, columnLengthArray, diff, excessRows, extra, formatstr, i, i1, isNumber, ix, j, j1, k, k1, key, keylen, keys, l, l1, len, len1, len10, len11, len12, len13, len14, len15, len16, len17, len2, len3, len4, len5, len6, len7, len8, len9, lineAr, linestr, longDashes, longStringOfSpaces, m, m1, n, newRow, newStrAr, numberformat, o, obj, p, partsMax, q, r, ref, ref1, ref2, ref3, rlen, row, rowAr, rowIndex, s, sp, spacePad, spacePadLen, spstr, startLine, str, t, tempAr, topline, u, v, val, valueLineAr, w, x, y, z;
+  var ar, arIndex, arStr, betweenStr, borderline, bottomline, colIndex, colMaxlen, collen, columnHeaders, columnLengthArray, diff, excessRows, extra, formatstr, headerStr, i, i1, isNumber, ix, j, j1, k, k1, key, keylen, keys, l, l1, len, len1, len10, len11, len12, len13, len14, len15, len16, len17, len2, len3, len4, len5, len6, len7, len8, len9, lineAr, linestr, longDashes, longStringOfSpaces, m, m1, n, newRow, newStrAr, numberformat, o, obj, p, partsMax, q, r, ref, ref1, ref2, ref3, ref4, ref5, rlen, row, rowAr, rowIndex, s, sp, spacePad, spacePadLen, spstr, startLine, str, t, tempAr, topline, u, v, val, valueLineAr, w, x, y, z;
   options = options || {};
   betweenStr = "│";
   startLine = "│";
@@ -61,6 +61,14 @@ format = function(inputObj, options) {
     keylen = keys.length;
     partsMax = 1; // a "part" is a column name divided by "."
     isNumber = _.fill(Array(keylen), false);
+    columnHeaders = _.map(keys, function(key) {
+      var ref, ref1;
+      if (options != null ? (ref = options.altHeaders) != null ? ref[key] : void 0 : void 0) {
+        return options != null ? (ref1 = options.altHeaders) != null ? ref1[key] : void 0 : void 0;
+      } else {
+        return key;
+      }
+    });
     // find the longest length of each column
     columnLengthArray = [];
     if (options.longdateformat) {
@@ -71,8 +79,9 @@ format = function(inputObj, options) {
 // seed the value with the column name
     for (i = j = 0, len1 = keys.length; j < len1; i = ++j) {
       key = keys[i];
+      headerStr = (options != null ? (ref = options.altHeaders) != null ? ref[key] : void 0 : void 0) || key;
       columnLengthArray[i] = 3;
-      sp = key.split(/[_\.]/);
+      sp = headerStr.split(/[_\.]/);
       for (k = 0, len2 = sp.length; k < len2; k++) {
         str = sp[k];
         // set to the longest of the split parts
@@ -98,7 +107,7 @@ format = function(inputObj, options) {
           val = val.toString();
         } else if (_.isNumber(val)) {
           isNumber[o] = true;
-          numberformat = options != null ? (ref = options.numberformat) != null ? ref[key] : void 0 : void 0;
+          numberformat = options != null ? (ref1 = options.numberformat) != null ? ref1[key] : void 0 : void 0;
           if (numberformat) {
             val = numeral(val).format(numberformat);
           }
@@ -150,11 +159,11 @@ format = function(inputObj, options) {
         rowAr.push(val);
       }
       if (excessRows.length) {
-        ref1 = excessRows[0];
+        ref2 = excessRows[0];
         // console.log excessRows
         // merge with rowAr
-        for (ix = t = 0, len8 = ref1.length; t < len8; ix = ++t) {
-          str = ref1[ix];
+        for (ix = t = 0, len8 = ref2.length; t < len8; ix = ++t) {
+          str = ref2[ix];
           if (str) {
             rowAr[ix] = str;
           }
@@ -198,7 +207,7 @@ format = function(inputObj, options) {
     // dotted columns names will be displayed in multiple lines
     linestr = startLine;
     newStrAr = [];
-    for (i = x = 0, ref2 = partsMax; x < ref2; i = x += 1) {
+    for (i = x = 0, ref3 = partsMax; x < ref3; i = x += 1) {
       newStrAr.push(startLine);
     }
     borderline = startLine;
@@ -209,10 +218,11 @@ format = function(inputObj, options) {
       // configure border line (top and bottom) first
       borderline += longDashes.slice(0, collen + 2) + betweenStr;
       tempAr = [];
-      for (i = z = 0, ref3 = partsMax; z < ref3; i = z += 1) {
+      for (i = z = 0, ref4 = partsMax; z < ref4; i = z += 1) {
         tempAr.push('');
       }
-      sp = key.split(/[_\.]/);
+      headerStr = (options != null ? (ref5 = options.altHeaders) != null ? ref5[key] : void 0 : void 0) || key;
+      sp = headerStr.split(/[_\.]/);
       for (i = i1 = 0, len13 = sp.length; i1 < len13; i = ++i1) {
         str = sp[i];
         tempAr[i] = str;

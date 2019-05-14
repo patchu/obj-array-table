@@ -48,6 +48,9 @@ format = (inputObj, options) ->
 		partsMax = 1 		# a "part" is a column name divided by "."
 		isNumber = _.fill Array(keylen), false
 
+		columnHeaders = _.map keys, (key) ->
+			if options?.altHeaders?[key] then options?.altHeaders?[key] else key
+
 		# find the longest length of each column
 		columnLengthArray = []
 
@@ -59,9 +62,10 @@ format = (inputObj, options) ->
 
 		# seed the value with the column name
 		for key, i in keys
+			headerStr = options?.altHeaders?[key] or key
 			columnLengthArray[i] = 3
 
-			sp = key.split /[_\.]/
+			sp = headerStr.split /[_\.]/
 			for str in sp
 				# set to the longest of the split parts
 				columnLengthArray[i] = Math.max columnLengthArray[i], str.length
@@ -184,7 +188,8 @@ format = (inputObj, options) ->
 			for i in [0... partsMax] by 1
 				tempAr.push ''
 
-			sp = key.split /[_\.]/
+			headerStr = options?.altHeaders?[key] or key
+			sp = headerStr.split /[_\.]/
 			for str, i in sp
 				tempAr[i] = str
 

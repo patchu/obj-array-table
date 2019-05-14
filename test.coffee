@@ -113,14 +113,14 @@ exports.parseTable = (test) ->
 
 exports.multiLine = (test) ->
 	obj = [
-		"First Name": 'George'
-		"Last Name": 'Washington'
+		firstname: 'George'
+		lastname: 'Washington'
 		age: 67
 		alive: false
 		description: "George Washington was an American political leader, military general, statesman, and Founding Father, who also served as the first President of the United States from 1789 to 1797.\nWashington commanded Patriot forces in the new nation's vital American Revolutionary War,\nand led them to victory over the British."
 	,
-		"First Name": 'Buckaroo'
-		"Last Name": 'Banzai'
+		firstname: 'Buckaroo'
+		lastname: 'Banzai'
 		alive: false
 		age: 4319
 		description: "Buckaroo Banzai is caught with his trusted allies, the Hong Kong Cavaliers,\nin a battle to the death between evil red aliens and good black aliens from Planet 10.\nLed by demonic dictator John Whorfin, who has taken over the body of Italian scientist Dr. Emilio Lizardo,\nthe aliens try to get the Overthruster back from Buckaroo Banzai."
@@ -150,6 +150,10 @@ exports.multiLine = (test) ->
 
 	options =
 		colMaxlen: 60
+		altHeaders:
+			firstname: 'First Name'
+			lastname: 'Last Name'
+
 	actualstr = objprint.format obj, options
 	actualAr = actualstr.split '\n'
 	testAr = teststr.split '\n'

@@ -94,15 +94,15 @@ exports.multiLine = function(test) {
   var actualAr, actualstr, i, j, len, obj, options, str, testAr, teststr;
   obj = [
     {
-      "First Name": 'George',
-      "Last Name": 'Washington',
+      firstname: 'George',
+      lastname: 'Washington',
       age: 67,
       alive: false,
       description: "George Washington was an American political leader, military general, statesman, and Founding Father, who also served as the first President of the United States from 1789 to 1797.\nWashington commanded Patriot forces in the new nation's vital American Revolutionary War,\nand led them to victory over the British."
     },
     {
-      "First Name": 'Buckaroo',
-      "Last Name": 'Banzai',
+      firstname: 'Buckaroo',
+      lastname: 'Banzai',
       alive: false,
       age: 4319,
       description: "Buckaroo Banzai is caught with his trusted allies, the Hong Kong Cavaliers,\nin a battle to the death between evil red aliens and good black aliens from Planet 10.\nLed by demonic dictator John Whorfin, who has taken over the body of Italian scientist Dr. Emilio Lizardo,\nthe aliens try to get the Overthruster back from Buckaroo Banzai."
@@ -110,7 +110,11 @@ exports.multiLine = function(test) {
   ];
   teststr = "\n┌────────────┬────────────┬──────┬───────┬──────────────────────────────────────────────────────────────┐\n│ First Name │ Last Name  │ age  │ alive │                         description                          │\n├────────────┼────────────┼──────┼───────┼──────────────────────────────────────────────────────────────┤\n│ George     │ Washington │   67 │ false │ George Washington was an American political leader, military │\n│            │            │      │       │ ↪   general, statesman, and Founding Father, who also served │\n│            │            │      │       │ ↪   as the first President of the United States from 1789 to │\n│            │            │      │       │ ↪   1797.                                                    │\n│            │            │      │       │ Washington commanded Patriot forces in the new nation's vita │\n│            │            │      │       │ ↪  l American Revolutionary War,                             │\n│            │            │      │       │ and led them to victory over the British.                    │\n│ Buckaroo   │ Banzai     │ 4319 │ false │ Buckaroo Banzai is caught with his trusted allies, the Hong  │\n│            │            │      │       │ ↪  Kong Cavaliers,                                           │\n│            │            │      │       │ in a battle to the death between evil red aliens and good bl │\n│            │            │      │       │ ↪  ack aliens from Planet 10.                                │\n│            │            │      │       │ Led by demonic dictator John Whorfin, who has taken over the │\n│            │            │      │       │ ↪   body of Italian scientist Dr. Emilio Lizardo,            │\n│            │            │      │       │ the aliens try to get the Overthruster back from Buckaroo Ba │\n│            │            │      │       │ ↪  nzai.                                                     │\n└────────────┴────────────┴──────┴───────┴──────────────────────────────────────────────────────────────┘\n  (2 rows returned)\n";
   options = {
-    colMaxlen: 60
+    colMaxlen: 60,
+    altHeaders: {
+      firstname: 'First Name',
+      lastname: 'Last Name'
+    }
   };
   actualstr = objprint.format(obj, options);
   actualAr = actualstr.split('\n');
