@@ -117,7 +117,7 @@ exports.multiLine = (test) ->
 		"Last Name": 'Washington'
 		age: 67
 		alive: false
-		description: "George Washington was an American political leader, military general, statesman, and Founding Father,\nwho also served as the first President of the United States from 1789 to 1797.\nWashington commanded Patriot forces in the new nation's vital American Revolutionary War,\nand led them to victory over the British."
+		description: "George Washington was an American political leader, military general, statesman, and Founding Father, who also served as the first President of the United States from 1789 to 1797.\nWashington commanded Patriot forces in the new nation's vital American Revolutionary War,\nand led them to victory over the British."
 	,
 		"First Name": 'Buckaroo'
 		"Last Name": 'Banzai'
@@ -130,9 +130,9 @@ exports.multiLine = (test) ->
 │ First Name │ Last Name  │ age  │ alive │                         description                          │
 ├────────────┼────────────┼──────┼───────┼──────────────────────────────────────────────────────────────┤
 │ George     │ Washington │   67 │ false │ George Washington was an American political leader, military │
-│            │            │      │       │ ↪   general, statesman, and Founding Father,                 │
-│            │            │      │       │ who also served as the first President of the United States  │
-│            │            │      │       │ ↪  from 1789 to 1797.                                        │
+│            │            │      │       │ ↪   general, statesman, and Founding Father, who also served │
+│            │            │      │       │ ↪   as the first President of the United States from 1789 to │
+│            │            │      │       │ ↪   1797.                                                    │
 │            │            │      │       │ Washington commanded Patriot forces in the new nation's vita │
 │            │            │      │       │ ↪  l American Revolutionary War,                             │
 │            │            │      │       │ and led them to victory over the British.                    │

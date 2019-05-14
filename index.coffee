@@ -68,6 +68,7 @@ format = (inputObj, options) ->
 			partsMax = Math.max partsMax, sp.length
 
 		# create array of arrays of values that all subsequent code will use
+		colMaxlen = options.colMaxlen || 80
 		valueLineAr = []
 
 		for obj, n in inputObj			# n index
@@ -102,7 +103,6 @@ format = (inputObj, options) ->
 					sp = splitTrimNoEmpty val, '\n'
 					if sp.length > 1
 						# check string length
-						colMaxlen = options.colMaxlen
 
 						ar = []
 						# go through all strings, checking for max length
