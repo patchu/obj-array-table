@@ -6,7 +6,7 @@ objprint = require('.');
 _ = require('lodash');
 
 exports.simple = function(test) {
-  var actualAr, actualstr, i, j, k, len, len1, obj, options, str, testAr, teststr;
+  var actualAr, actualstr, i, j, k, l, len, len1, len2, obj, options, str, testAr, teststr;
   obj = [
     {
       "First Name": 'John',
@@ -52,7 +52,6 @@ exports.simple = function(test) {
   options = {
     longdateformat: true,
     spaceDivider: true,
-    // using the "numeral" NPM package. See that documentation for formatting details
     numberformat: {
       "net.worth": '$ 0,0.00',
       age: '0,0'
@@ -62,6 +61,24 @@ exports.simple = function(test) {
   actualAr = actualstr.split('\n');
   testAr = teststr.split('\n');
   for (i = k = 0, len1 = actualAr.length; k < len1; i = ++k) {
+    str = actualAr[i];
+    // test trimmed strings
+    test.equal(_.trim(testAr[i]), _.trim(actualAr[i]));
+  }
+  console.log(actualstr);
+  teststr = "\n┌────────────┬───────────┬──────────────────┬───────┬───────┬───────┬──────────────────────┐\n│            │           │                  │       │  How  │       │                      │\n│            │           │                  │       │ Many  │       │                      │\n│            │           │       net        │       │ Cats  │       │                      │\n│ First Name │ Last Name │      worth       │  age  │ Owned │  zip  │         dob          │\n├────────────┼───────────┼──────────────────┼───────┼───────┼───────┼──────────────────────┤\n│ John       │ Smith     │       $ 1,199.00 │    22 │     2 │ 00000 │ 04/02/1946  08:41 pm │\n│ Buckaroo   │ Banzai    │ $ 100,000,222.44 │ 4,319 │     1 │ 12345 │ 12/25/1957  07:41 pm │\n└────────────┴───────────┴──────────────────┴───────┴───────┴───────┴──────────────────────┘\n  (2 rows returned)\n";
+  options = {
+    longdateformat: true,
+    excludeColumns: ['alive'],
+    numberformat: {
+      "net.worth": '$ 0,0.00',
+      age: '0,0'
+    }
+  };
+  actualstr = objprint.format(obj, options);
+  actualAr = actualstr.split('\n');
+  testAr = teststr.split('\n');
+  for (i = l = 0, len2 = actualAr.length; l < len2; i = ++l) {
     str = actualAr[i];
     // test trimmed strings
     test.equal(_.trim(testAr[i]), _.trim(actualAr[i]));

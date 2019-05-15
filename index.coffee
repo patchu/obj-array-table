@@ -42,6 +42,12 @@ format = (inputObj, options) ->
 
 	lineAr = []
 	if inputObj and inputObj.length
+		# exclude columns
+		if options.excludeColumns and options.excludeColumns.length
+			inputObj = _.each inputObj, (obj1) ->
+				for col in options.excludeColumns
+					delete obj1[col]
+
 		obj = inputObj[0]
 		keys = _.keys obj
 		keylen = keys.length

@@ -56,6 +56,19 @@ format = function(inputObj, options) {
   }
   lineAr = [];
   if (inputObj && inputObj.length) {
+    // exclude columns
+    if (options.excludeColumns && options.excludeColumns.length) {
+      inputObj = _.each(inputObj, function(obj1) {
+        var col, j, len1, ref, results;
+        ref = options.excludeColumns;
+        results = [];
+        for (j = 0, len1 = ref.length; j < len1; j++) {
+          col = ref[j];
+          results.push(delete obj1[col]);
+        }
+        return results;
+      });
+    }
     obj = inputObj[0];
     keys = _.keys(obj);
     keylen = keys.length;
