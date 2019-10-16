@@ -17,9 +17,13 @@ splitMaxlenStr = (str, colMaxlen) ->
 	ar = []
 	# go through all strings, checking for max length
 	while str.length > colMaxlen
-		ar.push str.substring 0, colMaxlen
+		# find the first space back within 15 characters
+		temp = str.substring 0, colMaxlen
+		pos = temp.lastIndexOf ' '
+		cutoff = if colMaxlen - pos > 15 then colMaxlen else pos
+		ar.push str.substring 0, cutoff
 		# str = "↪  " + str.substring colMaxlen
-		str = str.substring colMaxlen
+		str = "   "+str.substring cutoff+1
 	ar.push str
 	ar
 
@@ -141,7 +145,7 @@ format = (inputObj, options) ->
 								newRow = _.fill Array(keylen), ''
 								excessRows.push newRow
 							newRow = excessRows[arIndex]
-							newRow[o] = _.trim arStr
+							newRow[o] = _.trimEnd arStr
 					else if val.length > colMaxlen
 						ar = splitMaxlenStr val, colMaxlen
 						for arStr, arIndex in ar
@@ -149,7 +153,7 @@ format = (inputObj, options) ->
 								newRow = _.fill Array(keylen), ''
 								excessRows.push newRow
 							newRow = excessRows[arIndex]
-							newRow[o] = _.trim arStr
+							newRow[o] = _.trimEnd arStr
 
 				rowAr.push val
 			if excessRows.length

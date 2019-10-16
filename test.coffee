@@ -148,33 +148,33 @@ exports.multiLine = (test) ->
 		lastname: 'Washington'
 		age: 67
 		alive: false
-		description: "George Washington was an American political leader, military general, statesman, and Founding Father, who also served as the first President of the United States from 1789 to 1797.\nWashington commanded Patriot forces in the new nation's vital American Revolutionary War,\nand led them to victory over the British."
+		description: "George Washington was an American political leader, military general, statesman, and Founding Father, who also served as the first President of the United States from 1789 to 1797.\nWashington commanded Patriot forces in the new nation's vital American Revolutionary War, and led them to victory over the British."
 	,
 		firstname: 'Buckaroo'
 		lastname: 'Banzai'
 		alive: false
 		age: 4319
-		description: "Buckaroo Banzai is caught with his trusted allies, the Hong Kong Cavaliers,\nin a battle to the death between evil red aliens and good black aliens from Planet 10.\nLed by demonic dictator John Whorfin, who has taken over the body of Italian scientist Dr. Emilio Lizardo,\nthe aliens try to get the Overthruster back from Buckaroo Banzai."
+		description: "Buckaroo Banzai is caught with his trusted allies, the Hong Kong Cavaliers, in a battle to the death between evil red aliens and good black aliens from Planet 10.\nLed by demonic dictator John Whorfin, who has taken over the body of Italian scientist Dr. Emilio Lizardo, the aliens try to get the Overthruster back from Buckaroo Banzai."
 	]
 	teststr = """
-\n┌────────────┬────────────┬──────┬───────┬──────────────────────────────────────────────────────────────┐
-│ First Name │ Last Name  │ age  │ alive │                         description                          │
-├────────────┼────────────┼──────┼───────┼──────────────────────────────────────────────────────────────┤
-│ George     │ Washington │   67 │ false │ George Washington was an American political leader, military │
-│            │            │      │       │ general, statesman, and Founding Father, who also served as  │
-│            │            │      │       │ the first President of the United States from 1789 to 1797.  │
-│            │            │      │       │ Washington commanded Patriot forces in the new nation's vita │
-│            │            │      │       │ l American Revolutionary War,                                │
-│            │            │      │       │ and led them to victory over the British.                    │
-│ Buckaroo   │ Banzai     │ 4319 │ false │ Buckaroo Banzai is caught with his trusted allies, the Hong  │
-│            │            │      │       │ Kong Cavaliers,                                              │
-│            │            │      │       │ in a battle to the death between evil red aliens and good bl │
-│            │            │      │       │ ack aliens from Planet 10.                                   │
-│            │            │      │       │ Led by demonic dictator John Whorfin, who has taken over the │
-│            │            │      │       │ body of Italian scientist Dr. Emilio Lizardo,                │
-│            │            │      │       │ the aliens try to get the Overthruster back from Buckaroo Ba │
-│            │            │      │       │ nzai.                                                        │
-└────────────┴────────────┴──────┴───────┴──────────────────────────────────────────────────────────────┘
+\n┌────────────┬────────────┬──────┬───────┬─────────────────────────────────────────────────────────────┐
+│ First Name │ Last Name  │ age  │ alive │                         description                         │
+├────────────┼────────────┼──────┼───────┼─────────────────────────────────────────────────────────────┤
+│ George     │ Washington │   67 │ false │ George Washington was an American political leader,         │
+│            │            │      │       │    military general, statesman, and Founding Father, who    │
+│            │            │      │       │    also served as the first President of the United States  │
+│            │            │      │       │    from 1789 to 1797.                                       │
+│            │            │      │       │ Washington commanded Patriot forces in the new nation's     │
+│            │            │      │       │    vital American Revolutionary War, and led them to        │
+│            │            │      │       │    victory over the British.                                │
+│ Buckaroo   │ Banzai     │ 4319 │ false │ Buckaroo Banzai is caught with his trusted allies, the Hong │
+│            │            │      │       │    Kong Cavaliers, in a battle to the death between evil    │
+│            │            │      │       │    red aliens and good black aliens from Planet 10.         │
+│            │            │      │       │ Led by demonic dictator John Whorfin, who has taken over    │
+│            │            │      │       │    the body of Italian scientist Dr. Emilio Lizardo, the    │
+│            │            │      │       │    aliens try to get the Overthruster back from Buckaroo    │
+│            │            │      │       │    Banzai.                                                  │
+└────────────┴────────────┴──────┴───────┴─────────────────────────────────────────────────────────────┘
   (2 rows returned)\n
 """
 
@@ -215,29 +215,29 @@ exports.vertical = (test) ->
 		update_time: "2019-10-16T00:43:00.000Z"
 	]
 	teststr = """
-\n┌───────────────┬──────────────────────────────────────────────────────────────────────────────────┐
-│    Column     │                                      Values                                      │
-├───────────────┼──────────────────────────────────────────────────────────────────────────────────┤
-│       textid: │ 100                                                                              │
-│         text: │ Fourscore and seven years ago our fathers brought forth, on this continent, a ne │
-│               │ w nation, conceived in liberty, and dedicated to the proposition that all men ar │
-│               │ e created equal.                                                                 │
-│  update_time: │ 2019-10-14T23:17:00.000Z                                                         │
-├───────────────┼──────────────────────────────────────────────────────────────────────────────────┤
-│       textid: │ 101                                                                              │
-│         text: │ Now we are engaged in a great civil war, testing whether that nation, or any nat │
-│               │ ion so conceived, and so dedicated, can long endure.                             │
-│  update_time: │ 2019-10-14T23:19:00.000Z                                                         │
-├───────────────┼──────────────────────────────────────────────────────────────────────────────────┤
-│       textid: │ 102                                                                              │
-│         text: │ We are met on a great battle-field of that war.                                  │
-│  update_time: │ 2019-10-16T00:41:00.000Z                                                         │
-├───────────────┼──────────────────────────────────────────────────────────────────────────────────┤
-│       textid: │ 103                                                                              │
-│         text: │ We have come to dedicate a portion of that field, as a final resting-place for t │
-│               │ hose who here gave their lives, that that nation might live.                     │
-│  update_time: │ 2019-10-16T00:43:00.000Z                                                         │
-└───────────────┴──────────────────────────────────────────────────────────────────────────────────┘
+\n┌───────────────┬────────────────────────────────────────────────────────────────────────────────┐
+│    Column     │                                     Values                                     │
+├───────────────┼────────────────────────────────────────────────────────────────────────────────┤
+│       textid: │ 100                                                                            │
+│         text: │ Fourscore and seven years ago our fathers brought forth, on this continent, a  │
+│               │    new nation, conceived in liberty, and dedicated to the proposition that all │
+│               │    men are created equal.                                                      │
+│  update_time: │ 2019-10-14T23:17:00.000Z                                                       │
+├───────────────┼────────────────────────────────────────────────────────────────────────────────┤
+│       textid: │ 101                                                                            │
+│         text: │ Now we are engaged in a great civil war, testing whether that nation, or any   │
+│               │    nation so conceived, and so dedicated, can long endure.                     │
+│  update_time: │ 2019-10-14T23:19:00.000Z                                                       │
+├───────────────┼────────────────────────────────────────────────────────────────────────────────┤
+│       textid: │ 102                                                                            │
+│         text: │ We are met on a great battle-field of that war.                                │
+│  update_time: │ 2019-10-16T00:41:00.000Z                                                       │
+├───────────────┼────────────────────────────────────────────────────────────────────────────────┤
+│       textid: │ 103                                                                            │
+│         text: │ We have come to dedicate a portion of that field, as a final resting-place for │
+│               │    those who here gave their lives, that that nation might live.               │
+│  update_time: │ 2019-10-16T00:43:00.000Z                                                       │
+└───────────────┴────────────────────────────────────────────────────────────────────────────────┘
   (4 rows returned)\n
 """
 
