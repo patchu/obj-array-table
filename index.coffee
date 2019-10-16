@@ -18,9 +18,20 @@ splitMaxlenStr = (str, colMaxlen) ->
 	# go through all strings, checking for max length
 	while str.length > colMaxlen
 		ar.push str.substring 0, colMaxlen
-		str = "↪  " + str.substring colMaxlen
+		# str = "↪  " + str.substring colMaxlen
+		str = str.substring colMaxlen
 	ar.push str
-	return ar
+	ar
+
+# return the first NUM characters
+left = (str, num) ->
+	str.substr 0, num
+
+# return the last NUM characters
+right = (str, num) ->
+	str.substr str.length - num
+
+
 
 # input is an array of rows
 # [
@@ -33,6 +44,9 @@ splitMaxlenStr = (str, colMaxlen) ->
 #		longdateformat: true/false, print the year for date fields?
 #		meetInMiddle: right-justify even columns and left-justify odd columns
 format = (inputObj, options) ->
+	if options.vertical
+		return formatVertical inputObj, options
+
 	options = options or {}
 	betweenStr = "│"
 	startLine = "│"
@@ -150,27 +164,10 @@ format = (inputObj, options) ->
 				for row in excessRows
 					valueLineAr.push row
 
-		# console.log valueLineAr
-
-		# now cycle through each row and get the longest string
-		# for obj, j in inputObj			# j index
-		# 	for key, k in keys 		# k index
-		# 		val = obj[key]
-		# 		if val
-		# 			if _.isDate val
-		# 				val = dateformat val, formatstr
-		# 			else if _.isNumber(val)
-		# 				numberformat = options?.numberformat?[key]
-		# 				if numberformat
-		# 					val = numeral(val).format numberformat
-		# 			columnLengthArray[key] = Math.max val.toString().length, columnLengthArray[key]
-
 		for row, rowIndex in valueLineAr
 			for val, colIndex in row
 				val = val or ''
 				columnLengthArray[colIndex] = Math.max val.toString().length, columnLengthArray[colIndex]
-
-		# console.log partsMax, columnLengthArray
 
 		longStringOfSpaces = '                                                                                                                                                                                                                                                                                                '
 		longDashes =         '────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────'
@@ -199,15 +196,10 @@ format = (inputObj, options) ->
 			for str, i in sp
 				tempAr[i] = str
 
-			# console.log ''
-			# console.log 'start tempAr: ', tempAr
-
 			# pop away blank lines, push everything down
 			while not tempAr[partsMax-1]
 				tempAr.pop()
 				tempAr.unshift ''
-
-			# console.log 'end tempAr: ', tempAr
 
 			for str, i in tempAr
 				# for blank strings, just output collen + 2
@@ -339,6 +331,270 @@ format = (inputObj, options) ->
 
 	lineAr.join '\n'
 
+
+# put keys on the left and data on the right
+# no wrapping of data
+# we only have 2 columns, the keys and the values
+# each cell contains all the keys or all the values for that record
+formatVertical = (inputObj, options) ->
+	options = options or {}
+	colMaxlen = options.colMaxlen or 70
+	betweenStr = "│"
+	startLine = "│"
+	if options.spaceDivider
+		betweenStr = " "
+		startLine = " "
+
+	lineAr = []
+	isNumber = []
+
+	if inputObj and inputObj.length
+		# exclude columns
+		if options.excludeColumns and options.excludeColumns.length
+			inputObj = _.each inputObj, (obj1) ->
+				for col in options.excludeColumns
+					delete obj1[col]
+
+		obj = inputObj[0]
+
+		# find the longest key
+		keys = _.keys obj
+		keyMax = 1
+		for str in keys
+			keyMax = Math.max keyMax, str.length
+		keyMax = Math.max keyMax, "Columns".length
+		keyMax += 2
+
+		if options.longdateformat
+			formatstr = 'mm/dd/yyyy  hh:MM tt'
+		else
+			formatstr = 'mmm dd  hh:MM tt'
+
+		# each "row" is an array of values
+		# the "value" can be either a string or another array, in the case of multi-line
+		allRows = []
+		for obj, n in inputObj			# n index
+			colAr = []
+			valueAr = []
+
+			for key, o in keys 		# o index
+				ar = []
+				colAr.push key+':'
+				val = obj[key]
+
+				if _.isArray val
+					val = JSON.stringify val
+
+				else if _.isBoolean val
+					val = val.toString()
+
+				else if _.isNumber val
+					isNumber[o] = true
+					numberformat = options?.numberformat?[key]
+					if numberformat
+						val = numeral(val).format numberformat
+
+					val = _.trim val.toString()
+				else
+					if toString.call(val) is '[object Date]'
+						val = dateformat val, formatstr
+						val = val.replace ', 0', ',  '
+
+					if not val?
+						val = ''
+
+					# split and see if we have more than one element
+					# 		or if string is too long
+					# if so, add the array instead of string value
+					sp = splitTrimNoEmpty val, '\n'
+					if sp.length > 1
+						# check string length
+
+						# go through all strings, checking for max length
+						for spstr in sp
+							if spstr.length < colMaxlen
+								ar.push spstr
+							else
+								ar = _.concat ar, splitMaxlenStr spstr, colMaxlen
+					else if val.length > colMaxlen
+						ar = splitMaxlenStr val, colMaxlen
+
+				if ar.length
+					for item, index in ar
+						if index>0
+							colAr.push ''
+						valueAr.push item
+				else
+					valueAr.push val
+			allRows.push [ colAr, valueAr ]
+
+		valmax = 1
+		for row in allRows
+			valueAr = row[1]
+			for val in valueAr
+				valmax = Math.max valmax, val.length
+
+
+		longStringOfSpaces = '                                                                                                                                                                                                                                                                                                '
+		longDashes =         '────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────'
+
+		# print the column names
+		# dotted columns names will be displayed in multiple lines
+		linestr = startLine
+		newStrAr = []
+		partsMax = 1 			# we only have 1 line for column headers
+		columnLengthArray = [ keyMax, valmax ]
+		columnNames = [ 'Column', 'Values' ]
+
+		for i in [0... partsMax] by 1
+			newStrAr.push startLine
+
+		borderline = startLine
+		for key,l in columnNames 			# l
+			collen = columnLengthArray[l]
+
+			# configure border line (top and bottom) first
+			borderline += longDashes[0 ... collen+2] + betweenStr
+
+			tempAr = []
+			for i in [0... partsMax] by 1
+				tempAr.push ''
+
+			headerStr = options?.altHeaders?[key] or key
+			sp = headerStr.split /[_\.]/
+			for str, i in sp
+				tempAr[i] = str
+
+			# pop away blank lines, push everything down
+			while not tempAr[partsMax-1]
+				tempAr.pop()
+				tempAr.unshift ''
+
+			for str, i in tempAr
+				# for blank strings, just output collen + 2
+				if not str.length
+					newStrAr[i] += ' ' + longStringOfSpaces[0 ... collen] + ' ' +betweenStr
+					continue
+
+				spacePad = ''
+				extra = ''
+				if collen isnt str.length
+					# padding needed
+					diff = collen - str.length
+					spacePad = longStringOfSpaces[ 0 ... (diff / 2) ]
+					extra = longStringOfSpaces[ 0 ... (diff % 2)]
+
+				newStrAr[i] += ' ' + spacePad + str + extra + spacePad + ' ' + betweenStr
+
+		columnHeaders = newStrAr.join '\n'
+		lineAr.push columnHeaders
+
+		# print the dashes under the column names
+		linestr = '├─'
+		for key, i in columnNames
+			linestr += "#{longDashes[1..columnLengthArray[i]]}─#{betweenStr}─"
+		if options.spaceDivider
+			linestr = linestr.replace /─\ ─/g, '─┼─'
+			linestr = linestr.replace /┼─$/g, '┤'
+		else
+			linestr = linestr.replace /─│─/g, '─┼─'
+			linestr = linestr.replace /┼─$/g, '┤'
+		lineAr.push linestr
+		betweenline = linestr
+
+		for row in allRows
+			linestr = startLine+' '
+
+			len = row[0].length 			# how many lines for this row
+			for i in [0... len]
+				# right-justify column names, left justify values
+				keystr = right longStringOfSpaces + row[0][i], keyMax
+				valstr = left row[1][i] + longStringOfSpaces, valmax
+				linestr = "#{startLine} #{keystr} #{betweenStr} #{valstr} #{betweenStr}"
+				lineAr.push linestr
+
+			lineAr.push betweenline
+
+			# for val, colIndex in row
+			# 	if not val
+			# 		val = ''
+			# 	key = keys[colIndex]
+
+			# 	if isNumber[colIndex]
+			# 		val = _.trim val.toString()
+			# 		len = val.length
+			# 		# lineAr.push 'length, value, stored len: ', len, val, columnLengthArray[key]
+			# 		spacePadLen = columnLengthArray[colIndex] - len
+			# 		# lineAr.push 'spacePadLen: ', spacePadLen
+			# 		spacePad = longStringOfSpaces[1..spacePadLen]
+			# 		# linestr += spacePad+val.toString()+" | "
+
+			# 		if options.meetInMiddle
+			# 			if spacePad.length > 60
+			# 				spacePad = spacePad.substring 0,60
+
+			# 		if options.meetInMiddle and o % 2 is 1
+			# 			# linestr += val+spacePad+"   "
+			# 			linestr += "#{val}#{spacePad} #{betweenStr} "
+			# 		else
+			# 			linestr += "#{spacePad}#{val.toString()} #{betweenStr} "
+			# 	else
+			# 		spacePadLen = columnLengthArray[colIndex] + 1 - val.length
+			# 		spacePad = longStringOfSpaces[1..spacePadLen]
+			# 		# linestr += val+spacePad+"| "
+			# 		if options.meetInMiddle
+			# 			if spacePad.length > 60
+			# 				spacePad = spacePad.substring 0,60
+			# 		if options.meetInMiddle and o % 2 is 0
+			# 			spacePad = longStringOfSpaces[2..spacePadLen]
+			# 			# linestr += spacePad+val+betweenStr
+			# 			linestr += "#{spacePad}#{val}#{betweenStr} "
+			# 		else
+			# 			# linestr += val+spacePad+betweenStr
+			# 			linestr += "#{val}#{spacePad}#{betweenStr} "
+			# linestr += betweenStr
+
+				# output the right bar to tne the string
+
+			# final transformations
+
+			# leave out the trailing |
+			# linestr = linestr.substr 0, linestr.length-2
+
+			# lineAr.push linestr
+
+		# remove the last line
+		lineAr.pop()
+
+		# add border lines
+		if options.spaceDivider
+			topline = borderline.replace /─\ ─/g, '─┬─'
+			topline = topline.replace /\ ─/g, '┌─'
+			topline = topline.replace /─\ /g, '─┐'
+			bottomline = borderline.replace /─\ ─/g, '─┴─'
+			bottomline = bottomline.replace /\ ─/g, '└─'
+			bottomline = bottomline.replace /─\ /g, '─┘'
+		else
+			topline = borderline.replace /─│─/g, '─┬─'
+			topline = topline.replace /│─/g, '┌─'
+			topline = topline.replace /─│/g, '─┐'
+			bottomline = borderline.replace /─│─/g, '─┴─'
+			bottomline = bottomline.replace /│─/g, '└─'
+			bottomline = bottomline.replace /─│/g, '─┘'
+		lineAr.unshift topline
+		lineAr.unshift ''
+		lineAr.push bottomline
+
+		rlen = inputObj.length
+		if rlen is 1
+			lineAr.push "  (1 row returned)"
+		else
+			lineAr.push "  (#{rlen} rows returned)"
+		lineAr.push ''
+	else
+		lineAr.push "  (0 rows returned)"
+
+	lineAr.join '\n'
 
 # given a string in table format, returns an array of objects
 # uses the first line as properties for objects

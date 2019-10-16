@@ -1,4 +1,4 @@
-objprint = require '.'
+objprint = require './index.coffee'
 _ = require 'lodash'
 
 exports.simple = (test) ->
@@ -10,7 +10,8 @@ exports.simple = (test) ->
 		age: 22
 		How_Many_Cats_Owned: 2
 		zip: '00000'
-		dob: new Date 'Tue Apr 2 1946 20:41:37 GMT-0400 (EDT)'
+		# dob: new Date 'Tue Apr 2 1946 20:41:37 GMT-0400 (EDT)'
+		dob: new Date '1946-04-02T00:00:00.000Z'
 	,
 		"First Name": 'Buckaroo'
 		"Last Name": 'Banzai'
@@ -19,7 +20,8 @@ exports.simple = (test) ->
 		"net.worth": 100000222.44
 		How_Many_Cats_Owned: 1
 		zip: '12345'
-		dob: new Date 'Tue Dec 25 1957 20:41:37 GMT-0400 (EDT)'
+		# dob: new Date 'Tue Dec 25 1957 20:41:37 GMT-0400 (EDT)'
+		dob: new Date '1957-12-25T00:00:00.000Z'
 	]
 	options =
 		longdateformat: true
@@ -34,8 +36,8 @@ exports.simple = (test) ->
 │            │           │       │       net        │       │ Cats  │       │                      │
 │ First Name │ Last Name │ alive │      worth       │  age  │ Owned │  zip  │         dob          │
 ├────────────┼───────────┼───────┼──────────────────┼───────┼───────┼───────┼──────────────────────┤
-│ John       │ Smith     │ true  │       $ 1,199.00 │    22 │     2 │ 00000 │ 04/02/1946  08:41 pm │
-│ Buckaroo   │ Banzai    │ false │ $ 100,000,222.44 │ 4,319 │     1 │ 12345 │ 12/25/1957  07:41 pm │
+│ John       │ Smith     │ true  │       $ 1,199.00 │    22 │     2 │ 00000 │ 04/01/1946  07:00 pm │
+│ Buckaroo   │ Banzai    │ false │ $ 100,000,222.44 │ 4,319 │     1 │ 12345 │ 12/24/1957  07:00 pm │
 └────────────┴───────────┴───────┴──────────────────┴───────┴───────┴───────┴──────────────────────┘
   (2 rows returned)\n
 """
@@ -57,8 +59,8 @@ exports.simple = (test) ->
                                          net                  Cats
   First Name   Last Name   alive        worth          age    Owned    zip            dob
 ├────────────┼───────────┼───────┼──────────────────┼───────┼───────┼───────┼──────────────────────┤
-  John         Smith       true          $ 1,199.00      22       2   00000   04/02/1946  08:41 pm
-  Buckaroo     Banzai      false   $ 100,000,222.44   4,319       1   12345   12/25/1957  07:41 pm
+  John         Smith       true          $ 1,199.00      22       2   00000   04/01/1946  07:00 pm
+  Buckaroo     Banzai      false   $ 100,000,222.44   4,319       1   12345   12/24/1957  07:00 pm
 └────────────┴───────────┴───────┴──────────────────┴───────┴───────┴───────┴──────────────────────┘
   (2 rows returned)\n
 """
@@ -85,8 +87,8 @@ exports.simple = (test) ->
 │            │           │       net        │       │ Cats  │       │                      │
 │ First Name │ Last Name │      worth       │  age  │ Owned │  zip  │         dob          │
 ├────────────┼───────────┼──────────────────┼───────┼───────┼───────┼──────────────────────┤
-│ John       │ Smith     │       $ 1,199.00 │    22 │     2 │ 00000 │ 04/02/1946  08:41 pm │
-│ Buckaroo   │ Banzai    │ $ 100,000,222.44 │ 4,319 │     1 │ 12345 │ 12/25/1957  07:41 pm │
+│ John       │ Smith     │       $ 1,199.00 │    22 │     2 │ 00000 │ 04/01/1946  07:00 pm │
+│ Buckaroo   │ Banzai    │ $ 100,000,222.44 │ 4,319 │     1 │ 12345 │ 12/24/1957  07:00 pm │
 └────────────┴───────────┴──────────────────┴───────┴───────┴───────┴──────────────────────┘
   (2 rows returned)\n
 """
@@ -159,20 +161,19 @@ exports.multiLine = (test) ->
 │ First Name │ Last Name  │ age  │ alive │                         description                          │
 ├────────────┼────────────┼──────┼───────┼──────────────────────────────────────────────────────────────┤
 │ George     │ Washington │   67 │ false │ George Washington was an American political leader, military │
-│            │            │      │       │ ↪   general, statesman, and Founding Father, who also served │
-│            │            │      │       │ ↪   as the first President of the United States from 1789 to │
-│            │            │      │       │ ↪   1797.                                                    │
+│            │            │      │       │ general, statesman, and Founding Father, who also served as  │
+│            │            │      │       │ the first President of the United States from 1789 to 1797.  │
 │            │            │      │       │ Washington commanded Patriot forces in the new nation's vita │
-│            │            │      │       │ ↪  l American Revolutionary War,                             │
+│            │            │      │       │ l American Revolutionary War,                                │
 │            │            │      │       │ and led them to victory over the British.                    │
 │ Buckaroo   │ Banzai     │ 4319 │ false │ Buckaroo Banzai is caught with his trusted allies, the Hong  │
-│            │            │      │       │ ↪  Kong Cavaliers,                                           │
+│            │            │      │       │ Kong Cavaliers,                                              │
 │            │            │      │       │ in a battle to the death between evil red aliens and good bl │
-│            │            │      │       │ ↪  ack aliens from Planet 10.                                │
+│            │            │      │       │ ack aliens from Planet 10.                                   │
 │            │            │      │       │ Led by demonic dictator John Whorfin, who has taken over the │
-│            │            │      │       │ ↪   body of Italian scientist Dr. Emilio Lizardo,            │
+│            │            │      │       │ body of Italian scientist Dr. Emilio Lizardo,                │
 │            │            │      │       │ the aliens try to get the Overthruster back from Buckaroo Ba │
-│            │            │      │       │ ↪  nzai.                                                     │
+│            │            │      │       │ nzai.                                                        │
 └────────────┴────────────┴──────┴───────┴──────────────────────────────────────────────────────────────┘
   (2 rows returned)\n
 """
@@ -182,6 +183,67 @@ exports.multiLine = (test) ->
 		altHeaders:
 			firstname: 'First Name'
 			lastname: 'Last Name'
+
+	actualstr = objprint.format obj, options
+	actualAr = actualstr.split '\n'
+	testAr = teststr.split '\n'
+	for str, i in actualAr
+		# test trimmed strings
+		test.equal _.trim(testAr[i]), _.trim(actualAr[i])
+
+	console.log actualstr
+	test.done()
+
+
+# test vertical layout
+exports.vertical = (test) ->
+	obj = [
+		textid: 100
+		text: "Fourscore and seven years ago our fathers brought forth, on this continent, a new nation, conceived in liberty, and dedicated to the proposition that all men are created equal."
+		update_time: "2019-10-14T23:17:00.000Z"
+	,
+		textid: 101
+		text: "Now we are engaged in a great civil war, testing whether that nation, or any nation so conceived, and so dedicated, can long endure."
+		update_time: "2019-10-14T23:19:00.000Z"
+	,
+		textid: 102
+		text: "We are met on a great battle-field of that war."
+		update_time: "2019-10-16T00:41:00.000Z"
+	,
+		textid: 103
+		text: "We have come to dedicate a portion of that field, as a final resting-place for those who here gave their lives, that that nation might live."
+		update_time: "2019-10-16T00:43:00.000Z"
+	]
+	teststr = """
+\n┌───────────────┬──────────────────────────────────────────────────────────────────────────────────┐
+│    Column     │                                      Values                                      │
+├───────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+│       textid: │ 100                                                                              │
+│         text: │ Fourscore and seven years ago our fathers brought forth, on this continent, a ne │
+│               │ w nation, conceived in liberty, and dedicated to the proposition that all men ar │
+│               │ e created equal.                                                                 │
+│  update_time: │ 2019-10-14T23:17:00.000Z                                                         │
+├───────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+│       textid: │ 101                                                                              │
+│         text: │ Now we are engaged in a great civil war, testing whether that nation, or any nat │
+│               │ ion so conceived, and so dedicated, can long endure.                             │
+│  update_time: │ 2019-10-14T23:19:00.000Z                                                         │
+├───────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+│       textid: │ 102                                                                              │
+│         text: │ We are met on a great battle-field of that war.                                  │
+│  update_time: │ 2019-10-16T00:41:00.000Z                                                         │
+├───────────────┼──────────────────────────────────────────────────────────────────────────────────┤
+│       textid: │ 103                                                                              │
+│         text: │ We have come to dedicate a portion of that field, as a final resting-place for t │
+│               │ hose who here gave their lives, that that nation might live.                     │
+│  update_time: │ 2019-10-16T00:43:00.000Z                                                         │
+└───────────────┴──────────────────────────────────────────────────────────────────────────────────┘
+  (4 rows returned)\n
+"""
+
+	options =
+		vertical: true
+		colMaxlen: 80
 
 	actualstr = objprint.format obj, options
 	actualAr = actualstr.split '\n'
