@@ -44,10 +44,10 @@ right = (str, num) ->
 #		longdateformat: true/false, print the year for date fields?
 #		meetInMiddle: right-justify even columns and left-justify odd columns
 format = (inputObj, options) ->
+	options = options or {}
 	if options.vertical
 		return formatVertical inputObj, options
 
-	options = options or {}
 	betweenStr = "│"
 	startLine = "│"
 	if options.spaceDivider
