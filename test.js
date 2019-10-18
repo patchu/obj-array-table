@@ -188,3 +188,30 @@ exports.vertical = function(test) {
   console.log(actualstr);
   return test.done();
 };
+
+exports.shortAnswers = function(test) {
+  var actualAr, actualstr, i, j, len, obj, options, str, testAr, teststr;
+  obj = [
+    {
+      ans: 1
+    },
+    {
+      ans: 2
+    }
+  ];
+  options = {
+    vertical: true,
+    colMaxlen: 80
+  };
+  teststr = "\n┌───────────┬────────┐\n│  Column   │ Values │\n├───────────┼────────┤\n│      ans: │ 1      │\n├───────────┼────────┤\n│      ans: │ 2      │\n└───────────┴────────┘\n  (2 rows returned)\n";
+  actualstr = objprint.format(obj, options);
+  actualAr = actualstr.split('\n');
+  testAr = teststr.split('\n');
+  for (i = j = 0, len = actualAr.length; j < len; i = ++j) {
+    str = actualAr[i];
+    // test trimmed strings
+    test.equal(_.trim(testAr[i]), _.trim(actualAr[i]));
+  }
+  console.log(actualstr);
+  return test.done();
+};

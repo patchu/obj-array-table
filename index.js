@@ -508,6 +508,7 @@ formatVertical = function(inputObj, options) {
         valmax = Math.max(valmax, val.length);
       }
     }
+    valmax = Math.max(valmax, "Values".length);
     longStringOfSpaces = '                                                                                                                                                                                                                                                                                                ';
     longDashes = '────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────';
     // print the column names

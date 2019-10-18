@@ -254,3 +254,33 @@ exports.vertical = (test) ->
 
 	console.log actualstr
 	test.done()
+
+exports.shortAnswers = (test) ->
+	obj = [
+		ans: 1
+	,
+		ans: 2
+	]
+	options =
+		vertical: true
+		colMaxlen: 80
+	teststr = """
+\n┌───────────┬────────┐
+│  Column   │ Values │
+├───────────┼────────┤
+│      ans: │ 1      │
+├───────────┼────────┤
+│      ans: │ 2      │
+└───────────┴────────┘
+  (2 rows returned)\n
+"""
+
+	actualstr = objprint.format obj, options
+	actualAr = actualstr.split '\n'
+	testAr = teststr.split '\n'
+	for str, i in actualAr
+		# test trimmed strings
+		test.equal _.trim(testAr[i]), _.trim(actualAr[i])
+
+	console.log actualstr
+	test.done()
