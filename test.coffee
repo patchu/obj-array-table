@@ -284,3 +284,61 @@ exports.shortAnswers = (test) ->
 
 	console.log actualstr
 	test.done()
+
+# test compact flag and title
+exports.compactFlag = (test) ->
+	obj = [
+		ans: 1
+	,
+		ans: 2
+	]
+	options =
+		vertical: true
+		compact: true
+		title: 'Title Here'
+		colMaxlen: 80
+	teststr = """
+Title Here
+┌───────────┬────────┐
+│  Column   │ Values │
+├───────────┼────────┤
+│      ans: │ 1      │
+├───────────┼────────┤
+│      ans: │ 2      │
+└───────────┴────────┘
+\n
+"""
+	actualstr = objprint.format obj, options
+	actualAr = actualstr.split '\n'
+	testAr = teststr.split '\n'
+	for str, i in actualAr
+		# test trimmed strings
+		test.equal _.trim(testAr[i]), _.trim(actualAr[i])
+
+	console.log actualstr
+
+	# test compact regular
+	options =
+		compact: true
+		title: "Another title here"
+		colMaxlen: 80
+	teststr = """
+Another title here
+┌─────┐
+│ ans │
+├─────┤
+│   1 │
+│   2 │
+└─────┘
+\n
+"""
+	actualstr = objprint.format obj, options
+	actualAr = actualstr.split '\n'
+	testAr = teststr.split '\n'
+	for str, i in actualAr
+		# test trimmed strings
+		test.equal _.trim(testAr[i]), _.trim(actualAr[i])
+
+	console.log actualstr
+
+	test.done()

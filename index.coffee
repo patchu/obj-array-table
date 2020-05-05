@@ -49,6 +49,8 @@ right = (str, num) ->
 #		meetInMiddle: right-justify even columns and left-justify odd columns
 format = (inputObj, options) ->
 	options = options or {}
+	compactFlag = options.compact
+
 	if options.vertical
 		return formatVertical inputObj, options
 
@@ -321,17 +323,22 @@ format = (inputObj, options) ->
 			bottomline = bottomline.replace /│─/g, '└─'
 			bottomline = bottomline.replace /─│/g, '─┘'
 		lineAr.unshift topline
-		lineAr.unshift ''
+		if options.title
+			lineAr.unshift options.title
+		if not compactFlag
+			lineAr.unshift ''
 		lineAr.push bottomline
 
-		rlen = inputObj.length
-		if rlen is 1
-			lineAr.push "  (1 row returned)"
-		else
-			lineAr.push "  (#{rlen} rows returned)"
-		lineAr.push ''
+		if not compactFlag
+			rlen = inputObj.length
+			if rlen is 1
+				lineAr.push "  (1 row returned)"
+			else
+				lineAr.push "  (#{rlen} rows returned)"
+			lineAr.push ''
 	else
-		lineAr.push "  (0 rows returned)"
+		if not compactFlag
+			lineAr.push "  (0 rows returned)"
 
 	lineAr.join '\n'
 
@@ -345,6 +352,7 @@ formatVertical = (inputObj, options) ->
 	colMaxlen = options.colMaxlen or 70
 	betweenStr = "│"
 	startLine = "│"
+	compactFlag = options.compact
 	if options.spaceDivider
 		betweenStr = " "
 		startLine = " "
@@ -587,17 +595,22 @@ formatVertical = (inputObj, options) ->
 			bottomline = bottomline.replace /│─/g, '└─'
 			bottomline = bottomline.replace /─│/g, '─┘'
 		lineAr.unshift topline
-		lineAr.unshift ''
+		if options.title
+			lineAr.unshift options.title
+		if not compactFlag
+			lineAr.unshift ''
 		lineAr.push bottomline
 
-		rlen = inputObj.length
-		if rlen is 1
-			lineAr.push "  (1 row returned)"
-		else
-			lineAr.push "  (#{rlen} rows returned)"
-		lineAr.push ''
+		if not compactFlag
+			rlen = inputObj.length
+			if rlen is 1
+				lineAr.push "  (1 row returned)"
+			else
+				lineAr.push "  (#{rlen} rows returned)"
+			lineAr.push ''
 	else
-		lineAr.push "  (0 rows returned)"
+		if not compactFlag
+			lineAr.push "  (0 rows returned)"
 
 	lineAr.join '\n'
 
