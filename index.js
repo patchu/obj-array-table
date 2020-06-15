@@ -61,7 +61,7 @@ right = function(str, num) {
 //		longdateformat: true/false, print the year for date fields?
 //		meetInMiddle: right-justify even columns and left-justify odd columns
 format = function(inputObj, options) {
-  var ar, arIndex, arStr, betweenStr, borderline, bottomline, colIndex, colMaxlen, collen, columnHeaders, columnLengthArray, compactFlag, diff, excessRows, extra, formatstr, headerStr, i, i1, isNumber, ix, j, j1, k, k1, key, keylen, keys, l, l1, len, len1, len10, len11, len12, len13, len14, len15, len16, len17, len2, len3, len4, len5, len6, len7, len8, len9, lineAr, linestr, longDashes, longStringOfSpaces, m, m1, n, newRow, newStrAr, numberformat, o, obj, p, partsMax, q, r, ref, ref1, ref2, ref3, ref4, ref5, rlen, row, rowAr, rowIndex, s, sp, spacePad, spacePadLen, spstr, startLine, str, t, tempAr, topline, u, v, val, valueLineAr, w, x, y, z;
+  var ar, arIndex, arStr, betweenStr, borderline, bottomline, colIndex, colMaxlen, collen, columnHeaders, columnLengthArray, compactFlag, diff, excessRows, extra, formatstr, headerStr, i, i1, isNumber, ix, j, j1, k, k1, key, keylen, keys, l, l1, len, len1, len10, len11, len12, len13, len14, len15, len16, len17, len2, len3, len4, len5, len6, len7, len8, len9, lineAr, linestr, longDashes, longStringOfSpaces, m, m1, n, newRow, newStrAr, numberformat, o, obj, p, partsMax, q, r, ref, ref1, ref2, ref3, ref4, ref5, ref6, rlen, row, rowAr, rowIndex, s, sp, spacePad, spacePadLen, spstr, startLine, str, t, tempAr, topline, u, v, val, valueLineAr, w, x, y, z;
   options = options || {};
   compactFlag = options.compact;
   if (options.vertical) {
@@ -341,6 +341,8 @@ format = function(inputObj, options) {
             spacePad = longStringOfSpaces.slice(2, +spacePadLen + 1 || 9e9);
             // linestr += spacePad+val+betweenStr
             linestr += `${spacePad}${val}${betweenStr} `;
+          } else if (((ref6 = options.align) != null ? ref6[key] : void 0) === 'right') {
+            linestr += `${spacePad.slice(0, -1)}${val} ${betweenStr} `;
           } else {
             // linestr += val+spacePad+betweenStr
             linestr += `${val}${spacePad}${betweenStr} `;

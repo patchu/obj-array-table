@@ -293,6 +293,8 @@ format = (inputObj, options) ->
 						spacePad = longStringOfSpaces[2..spacePadLen]
 						# linestr += spacePad+val+betweenStr
 						linestr += "#{spacePad}#{val}#{betweenStr} "
+					else if options.align?[key] is 'right'
+						linestr += "#{spacePad[...-1]}#{val} #{betweenStr} "
 					else
 						# linestr += val+spacePad+betweenStr
 						linestr += "#{val}#{spacePad}#{betweenStr} "

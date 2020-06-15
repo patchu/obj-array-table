@@ -117,7 +117,7 @@ exports.simple = function(test) {
 };
 
 exports.parseTable = function(test) {
-  var ar, expectedAr, tableText;
+  var ar, expectedAr, options, resultstr, tableText, teststr;
   tableText = `# this is a comment
 # ignores blank lines, and blank table rows
 
@@ -142,6 +142,21 @@ exports.parseTable = function(test) {
   ];
   ar = objprint.parse(tableText);
   test.deepEqual(ar, expectedAr);
+  options = {
+    align: {
+      strHeader: 'right'
+    }
+  };
+  resultstr = objprint.format(expectedAr, options);
+  console.log(resultstr);
+  teststr = `\n┌──────┬───────────┬──────┐
+│ col1 │ strHeader │ col3 │
+├──────┼───────────┼──────┤
+│ 1    │     hello │ 22   │
+│ 2    │     world │ 4    │
+└──────┴───────────┴──────┘
+  (2 rows returned)\n`;
+  test.equal(resultstr, teststr);
   return test.done();
 };
 
