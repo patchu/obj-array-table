@@ -1,13 +1,26 @@
+# originally 6.8M
+
 dateformat = require 'dateformat-nodep'
 numeral = require 'numeral'
-_ = require 'lodash'
+_trim = require 'lodash.trim'
+_trimEnd = require 'lodash.trimend'
+_each = require 'lodash.foreach'
+_keys = require 'lodash.keys'
+_fill = require 'lodash.fill'
+_map = require 'lodash.map'
+_concat = require 'lodash.concat'
+_split = require 'lodash.split'
+_startsWith = require 'lodash.startswith'
+_isArray = require 'lodash.isarray'
+_isBoolean = require 'lodash.isboolean'
+_isNumber = require 'lodash.isnumber'
 
 # split and remove all empty elements
 splitTrimNoEmpty = (line, splitChar) ->
 	ar = line.split splitChar
 	newAr = []
 	for str in ar
-		newstr = _.trim str
+		newstr = _trim str
 		if newstr
 			newAr.push newstr
 	newAr
@@ -64,17 +77,17 @@ format = (inputObj, options) ->
 	if inputObj and inputObj.length
 		# exclude columns
 		if options.excludeColumns and options.excludeColumns.length
-			inputObj = _.each inputObj, (obj1) ->
+			inputObj = _each inputObj, (obj1) ->
 				for col in options.excludeColumns
 					delete obj1[col]
 
 		obj = inputObj[0]
-		keys = _.keys obj
+		keys = _keys obj
 		keylen = keys.length
 		partsMax = 1 		# a "part" is a column name divided by "."
-		isNumber = _.fill Array(keylen), false
+		isNumber = _fill Array(keylen), false
 
-		columnHeaders = _.map keys, (key) ->
+		columnHeaders = _map keys, (key) ->
 			if options?.altHeaders?[key] then options?.altHeaders?[key] else key
 
 		# find the longest length of each column
@@ -108,19 +121,19 @@ format = (inputObj, options) ->
 			for key, o in keys 		# o index
 				val = obj[key]
 
-				if _.isArray val
+				if _isArray val
 					val = JSON.stringify val
 
-				else if _.isBoolean val
+				else if _isBoolean val
 					val = val.toString()
 
-				else if _.isNumber val
+				else if _isNumber val
 					isNumber[o] = true
 					numberformat = options?.numberformat?[key]
 					if numberformat
 						val = numeral(val).format numberformat
 
-					val = _.trim val.toString()
+					val = _trim val.toString()
 				else
 					if toString.call(val) is '[object Date]'
 						val = dateformat val, formatstr
@@ -140,22 +153,22 @@ format = (inputObj, options) ->
 							if spstr.length < colMaxlen
 								ar.push spstr
 							else
-								ar = _.concat ar, splitMaxlenStr spstr, colMaxlen
+								ar = _concat ar, splitMaxlenStr spstr, colMaxlen
 
 						for arStr, arIndex in ar
 							if arIndex >= excessRows.length
-								newRow = _.fill Array(keylen), ''
+								newRow = _fill Array(keylen), ''
 								excessRows.push newRow
 							newRow = excessRows[arIndex]
-							newRow[o] = _.trimEnd arStr
+							newRow[o] = _trimEnd arStr
 					else if val.length > colMaxlen
 						ar = splitMaxlenStr val, colMaxlen
 						for arStr, arIndex in ar
 							if arIndex >= excessRows.length
-								newRow = _.fill Array(keylen), ''
+								newRow = _fill Array(keylen), ''
 								excessRows.push newRow
 							newRow = excessRows[arIndex]
-							newRow[o] = _.trimEnd arStr
+							newRow[o] = _trimEnd arStr
 
 				rowAr.push val
 			if excessRows.length
@@ -265,7 +278,7 @@ format = (inputObj, options) ->
 				key = keys[colIndex]
 
 				if isNumber[colIndex]
-					val = _.trim val.toString()
+					val = _trim val.toString()
 					len = val.length
 					# lineAr.push 'length, value, stored len: ', len, val, columnLengthArray[key]
 					spacePadLen = columnLengthArray[colIndex] - len
@@ -365,14 +378,14 @@ formatVertical = (inputObj, options) ->
 	if inputObj and inputObj.length
 		# exclude columns
 		if options.excludeColumns and options.excludeColumns.length
-			inputObj = _.each inputObj, (obj1) ->
+			inputObj = _each inputObj, (obj1) ->
 				for col in options.excludeColumns
 					delete obj1[col]
 
 		obj = inputObj[0]
 
 		# find the longest key
-		keys = _.keys obj
+		keys = _keys obj
 		keyMax = 1
 		for str in keys
 			keyMax = Math.max keyMax, str.length
@@ -396,19 +409,19 @@ formatVertical = (inputObj, options) ->
 				colAr.push key+':'
 				val = obj[key]
 
-				if _.isArray val
+				if _isArray val
 					val = JSON.stringify val
 
-				else if _.isBoolean val
+				else if _isBoolean val
 					val = val.toString()
 
-				else if _.isNumber val
+				else if _isNumber val
 					isNumber[o] = true
 					numberformat = options?.numberformat?[key]
 					if numberformat
 						val = numeral(val).format numberformat
 
-					val = _.trim val.toString()
+					val = _trim val.toString()
 				else
 					if toString.call(val) is '[object Date]'
 						val = dateformat val, formatstr
@@ -429,7 +442,7 @@ formatVertical = (inputObj, options) ->
 							if spstr.length < colMaxlen
 								ar.push spstr
 							else
-								ar = _.concat ar, splitMaxlenStr spstr, colMaxlen
+								ar = _concat ar, splitMaxlenStr spstr, colMaxlen
 					else if val.length > colMaxlen
 						ar = splitMaxlenStr val, colMaxlen
 
@@ -536,7 +549,7 @@ formatVertical = (inputObj, options) ->
 			# 	key = keys[colIndex]
 
 			# 	if isNumber[colIndex]
-			# 		val = _.trim val.toString()
+			# 		val = _trim val.toString()
 			# 		len = val.length
 			# 		# lineAr.push 'length, value, stored len: ', len, val, columnLengthArray[key]
 			# 		spacePadLen = columnLengthArray[colIndex] - len
@@ -623,28 +636,28 @@ parse = (text) ->
 	headerSeen = false
 	propArray = []
 
-	lines = _.split text, '\n'
+	lines = _split text, '\n'
 	for line, i in lines
-		line = _.trim line
-		if _.startsWith line, '#'
+		line = _trim line
+		if _startsWith line, '#'
 			# if line starts with a comment, ignore it
 			continue
 
 		if not line
 			continue
 
-		lineParts = _.split line, '|'
+		lineParts = _split line, '|'
 		if lineParts.length < 3
 			# vertical bar not found
 			continue
 
-		if _.startsWith lineParts[1], '-'
+		if _startsWith lineParts[1], '-'
 			continue
 
 		if not headerSeen
 			headerSeen = true
 			propArray = lineParts[1...].map((item) ->
-				return _.trim item
+				return _trim item
 			).filter (item) ->
 				item isnt ''
 			continue
@@ -652,7 +665,7 @@ parse = (text) ->
 		newObj = {}
 		valFound = false
 		for prop, i in propArray
-			val = _.trim lineParts[i+1]
+			val = _trim lineParts[i+1]
 			if not val
 				continue
 			newObj[prop] = val

@@ -1,5 +1,5 @@
 objprint = require './index.coffee'
-_ = require 'lodash'
+_trim = require 'lodash.trim'
 
 exports.simple = (test) ->
 	obj = [
@@ -47,7 +47,7 @@ exports.simple = (test) ->
 	testAr = teststr.split '\n'
 	for str, i in actualAr
 		# test trimmed strings
-		test.equal _.trim(testAr[i]), _.trim(actualAr[i])
+		test.equal _trim(testAr[i]), _trim(actualAr[i])
 
 	console.log actualstr
 	# test.equal teststr, actualstr
@@ -76,7 +76,7 @@ exports.simple = (test) ->
 	testAr = teststr.split '\n'
 	for str, i in actualAr
 		# test trimmed strings
-		test.equal _.trim(testAr[i]), _.trim(actualAr[i])
+		test.equal _trim(testAr[i]), _trim(actualAr[i])
 
 	console.log actualstr
 
@@ -104,7 +104,7 @@ exports.simple = (test) ->
 	testAr = teststr.split '\n'
 	for str, i in actualAr
 		# test trimmed strings
-		test.equal _.trim(testAr[i]), _.trim(actualAr[i])
+		test.equal _trim(testAr[i]), _trim(actualAr[i])
 
 	console.log actualstr
 
@@ -204,7 +204,7 @@ exports.multiLine = (test) ->
 	testAr = teststr.split '\n'
 	for str, i in actualAr
 		# test trimmed strings
-		test.equal _.trim(testAr[i]), _.trim(actualAr[i])
+		test.equal _trim(testAr[i]), _trim(actualAr[i])
 
 	console.log actualstr
 	test.done()
@@ -265,7 +265,7 @@ exports.vertical = (test) ->
 	testAr = teststr.split '\n'
 	for str, i in actualAr
 		# test trimmed strings
-		test.equal _.trim(testAr[i]), _.trim(actualAr[i])
+		test.equal _trim(testAr[i]), _trim(actualAr[i])
 
 	console.log actualstr
 	test.done()
@@ -295,7 +295,7 @@ exports.shortAnswers = (test) ->
 	testAr = teststr.split '\n'
 	for str, i in actualAr
 		# test trimmed strings
-		test.equal _.trim(testAr[i]), _.trim(actualAr[i])
+		test.equal _trim(testAr[i]), _trim(actualAr[i])
 
 	console.log actualstr
 	test.done()
@@ -328,7 +328,7 @@ Title Here
 	testAr = teststr.split '\n'
 	for str, i in actualAr
 		# test trimmed strings
-		test.equal _.trim(testAr[i]), _.trim(actualAr[i])
+		test.equal _trim(testAr[i]), _trim(actualAr[i])
 
 	console.log actualstr
 
@@ -352,7 +352,7 @@ Another title here
 	testAr = teststr.split '\n'
 	for str, i in actualAr
 		# test trimmed strings
-		test.equal _.trim(testAr[i]), _.trim(actualAr[i])
+		test.equal _trim(testAr[i]), _trim(actualAr[i])
 
 	console.log actualstr
 
