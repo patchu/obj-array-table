@@ -1,4 +1,3 @@
-# originally 6.8M
 
 dateformat = require 'dateformat-nodep'
 numeral = require 'numeral'
@@ -63,6 +62,7 @@ right = (str, num) ->
 format = (inputObj, options) ->
 	options = options or {}
 	compactFlag = options.compact
+	noheaders = options.noheaders
 
 	if options.vertical
 		return formatVertical inputObj, options
@@ -249,20 +249,21 @@ format = (inputObj, options) ->
 		columnHeaders = newStrAr.join '\n'
 		# console.log columnHeaders, newStrAr
 
-		# lineAr.push linestr
-		lineAr.push columnHeaders
+		if not noheaders
+			# lineAr.push linestr
+			lineAr.push columnHeaders
 
-		# print the dashes under the column names
-		linestr = '├─'
-		for key, i in keys
-			linestr += "#{longDashes[1..columnLengthArray[i]]}─#{betweenStr}─"
-		if options.spaceDivider
-			linestr = linestr.replace /─\ ─/g, '─┼─'
-			linestr = linestr.replace /┼─$/g, '┤'
-		else
-			linestr = linestr.replace /─│─/g, '─┼─'
-			linestr = linestr.replace /┼─$/g, '┤'
-		lineAr.push linestr
+			# print the dashes under the column names
+			linestr = '├─'
+			for key, i in keys
+				linestr += "#{longDashes[1..columnLengthArray[i]]}─#{betweenStr}─"
+			if options.spaceDivider
+				linestr = linestr.replace /─\ ─/g, '─┼─'
+				linestr = linestr.replace /┼─$/g, '┤'
+			else
+				linestr = linestr.replace /─│─/g, '─┼─'
+				linestr = linestr.replace /┼─$/g, '┤'
+			lineAr.push linestr
 
 		# now cycle again and print result
 		# for obj, n in inputObj			# n index

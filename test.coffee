@@ -356,4 +356,28 @@ Another title here
 
 	console.log actualstr
 
+
+	expectedAr = [
+		col1: '1'
+		strHeader: 'hello'
+		col3: '22'
+	,
+		col1: '2'
+		strHeader: 'world'
+		col3: '4'
+	]
+
+	options =
+		noheaders: true
+		compact: true
+	resultstr = objprint.format expectedAr, options
+	console.log resultstr
+	teststr = """
+┌──────┬───────────┬──────┐
+│ 1    │ hello     │ 22   │
+│ 2    │ world     │ 4    │
+└──────┴───────────┴──────┘
+ """
+	test.equal resultstr, teststr
+
 	test.done()
